@@ -38,8 +38,14 @@ def creer_fichier_pret(tel,montant):
     # fichier_pret = r"./BD/PRET/"+tel+".txt"
     fichier_pret = f"./BD/PRET/{tel}.txt"
     if not exists(fichier_pret): #Si le fichier n'existe pas (pas de pret pour le client)
-        with open(fichier_pret,"w") as f:
-            f.write(f"{montant}:")
+        mode = "w"
+        content = f"{montant}:"
+    else: #Si le fichier existe deja (le client a au moins un fait un pret)
+        mode = "a"
+        content = f"\n{montant}:"
+    with open(fichier_pret,mode) as f:
+        f.write(content)
+    print(f"Le pret du montant de '{montant}' est effectif✅")
     
     
 def versement(tel):
@@ -73,12 +79,12 @@ def versement(tel):
                 if montant_a_verser > restant:
                     print(f"Vous lui devez {montant_a_verser-restant} F")
                     montant_a_verser = restant
-                # Enregistrer le versment
-                with open(fichier_pret,"a") as f:
-                    if nbrVersement == 0:
-                        f.write(f"{montant_a_verser}")
-                    else:
-                        f.write(f"-{montant_a_verser}")
+            # Enregistrer le versment
+            with open(fichier_pret,"a") as f:
+                if nbrVersement == 0:
+                    f.write(f"{montant_a_verser}")
+                else:
+                    f.write(f"-{montant_a_verser}")
     
 def pret_en_cours(tel):
     fichier_pret = f"./BD/PRET/{tel}.txt"

@@ -1,5 +1,6 @@
 from functions import (connexion,clear,
                        add_client, 
+                       pret_en_cours,
                        findTelephone,
                        creer_fichier_pret,
                        versement)
@@ -36,20 +37,27 @@ def page_nouveau_client(user):
     return add_client(nomCli,prenomCli,telCli,adresseCli)
 
 def page_pret(user):
-    header(APP_NAME,user,"💵")
+    header(APP_NAME,user,"$")
     tel = input("{:>30}".format("Telephone du client : "))
     # 1. Verifier si le numero existe dans nos donnees
     if findTelephone(tel) == True:
         # 2. Verifier si le client n'a pas de pret en cours
-        # 3. Saisir le montant du pret
-        montant = input("{:>30}".format("Montant du pret : "))
-        creer_fichier_pret(tel,montant)
+        restant,nbreRembs = pret_en_cours(tel)
+        if int(restant) > 0: # Pres en cours
+            print(f"Le client a un pret en cours de {restant} CFA, il reste {nbreRembs} versements.")
+        else: # Pas en cours
+            # 3. Saisir le montant du pret
+            montant = input("{:>30}".format("Montant du pret : "))
+            creer_fichier_pret(tel,montant)
     # 4. Enregistrer le pret
-    
+    else:
+        print("❌Le client n'existe pas!❌")
 def page_versement(user):
-    header(APP_NAME,user,"💵")
+    header(APP_NAME,user,"$")
     tel = input("{:>30}".format("Telephone du client : "))
     # 1. Verifier si le numero existe dans nos donnees
     if findTelephone(tel) == True:
         versement(tel)
+    
+    
     
